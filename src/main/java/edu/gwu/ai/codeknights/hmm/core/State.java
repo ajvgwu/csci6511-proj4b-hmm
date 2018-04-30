@@ -2,6 +2,21 @@ package edu.gwu.ai.codeknights.hmm.core;
 
 public enum State {
 
-  NON_CODING,
-  CODING;
+  NON_CODING("N"),
+  CODING("G");
+
+  private final String id;
+
+  private State(final String id) {
+    this.id = id;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public String toString() {
+    return getId();
+  }
 }

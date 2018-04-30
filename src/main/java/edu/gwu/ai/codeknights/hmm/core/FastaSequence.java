@@ -15,4 +15,9 @@ public class FastaSequence {
   public List<Nucleotide> getNucleotides() {
     return nucleotides;
   }
+
+  @Override
+  public String toString() {
+    return String.valueOf(nucleotides);
+  }
 }
