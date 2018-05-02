@@ -201,18 +201,20 @@ public class HMM {
   public List<State> evaluate(final FastaSequence seq) {
     final List<State> states = new ArrayList<>();
 
-    // Always start in non-coding state for first two nucleotides
-    State prevState = State.NON_CODING;
-    states.add(prevState);
-    states.add(prevState);
-    for (int i = 2; i < seq.length(); i++) {
-      final Nucleotide n1 = seq.get(i - 2);
-      final Nucleotide n2 = seq.get(i - 1);
-      final Nucleotide n3 = seq.get(i);
-      final State curState = null;
-      //TODO: finish
-      states.add(curState);
+    // Always start in non-coding state
+    Nucleotide n1 = null;
+    Nucleotide n2 = Nucleotide.A;
+    Nucleotide n3 = Nucleotide.A;
+    State prevState = null;
+    State curState = State.NON_CODING;
+    for (int i = 0; i < seq.length(); i++) {
+      n1 = n2;
+      n2 = n3;
+      n3 = seq.get(i);
       prevState = curState;
+      curState = null;
+      // TODO: use forward-algorithm to determine most likely current state
+      states.add(curState);
     }
 
     // Return result
