@@ -53,7 +53,7 @@ public class FindGenes extends AbstractInputFileCmd {
     final FastaSequence seq = createSequenceFromInput();
 
     // Find protein-coding genes
-    final HMM hmm = new HMM(getPnn(), getPgg(), Const.tableOne);
+    final HMM hmm = new HMM(getPnn(), getPgg(), Const.TABLE_ONE);
     final long startTimeMs = System.currentTimeMillis();
     final List<State> states = hmm.evaluate(seq);
     final long endTimeMs = System.currentTimeMillis();

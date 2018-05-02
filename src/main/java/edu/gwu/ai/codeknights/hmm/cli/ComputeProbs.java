@@ -48,7 +48,7 @@ public class ComputeProbs extends AbstractCmd {
 
     // Compute probabilities
     System.out.println("For sequence ending with '..." + n1.toString() + n2.toString() + "':");
-    final HMM hmm = new HMM(1.0, 1.0, Const.tableOne);
+    final HMM hmm = new HMM(1.0, 1.0, Const.TABLE_ONE);
     for (final State state : EnumSet.allOf(State.class)) {
       for (final Nucleotide n3 : EnumSet.allOf(Nucleotide.class)) {
         final double prob = hmm.getProb(state, n1, n2, n3);
