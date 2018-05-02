@@ -9,6 +9,7 @@ import picocli.CommandLine.RunLast;
   description = "command-line interface for HMM",
   subcommands = {
     PrintSequence.class,
+    ComputeProbs.class,
     FindGenes.class
   })
 public class Cli extends AbstractCmd {

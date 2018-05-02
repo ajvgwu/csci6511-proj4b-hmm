@@ -57,8 +57,10 @@ Usage: hmm [-h]
 command-line interface for HMM
   -h, --help                  show this help message and exit
 Commands:
-  print  print the input sequence
-  find   find the protein coding genes in the given sequence
+  print          print the input sequence
+  compute-probs  compute probabilities of next nucleotide following a given
+                   sequence
+  find           find the protein coding genes in the given sequence
 ```
 
 For usage instructions for a particular command:

@@ -4,6 +4,7 @@ import org.pmw.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class FastaSequence {
@@ -40,7 +41,15 @@ public class FastaSequence {
   }
 
   public List<Nucleotide> getNucleotides() {
-    return nucleotides;
+    return Collections.unmodifiableList(nucleotides);
+  }
+
+  public int length() {
+    return nucleotides.size();
+  }
+
+  public Nucleotide get(final int i) throws IndexOutOfBoundsException {
+    return nucleotides.get(i);
   }
 
   @Override
