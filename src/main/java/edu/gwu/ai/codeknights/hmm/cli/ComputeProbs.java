@@ -2,6 +2,7 @@ package edu.gwu.ai.codeknights.hmm.cli;
 
 import java.util.EnumSet;
 
+import edu.gwu.ai.codeknights.hmm.config.Const;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
 import edu.gwu.ai.codeknights.hmm.core.Nucleotide;
 import edu.gwu.ai.codeknights.hmm.core.State;
@@ -47,7 +48,7 @@ public class ComputeProbs extends AbstractCmd {
 
     // Compute probabilities
     System.out.println("For sequence ending with '..." + n1.toString() + n2.toString() + "':");
-    final HMM hmm = new HMM(1.0, 1.0);
+    final HMM hmm = new HMM(1.0, 1.0, Const.tableOne);
     for (final State state : EnumSet.allOf(State.class)) {
       for (final Nucleotide n3 : EnumSet.allOf(Nucleotide.class)) {
         final double prob = hmm.getProb(state, n1, n2, n3);

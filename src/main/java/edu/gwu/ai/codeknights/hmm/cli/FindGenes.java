@@ -2,6 +2,7 @@ package edu.gwu.ai.codeknights.hmm.cli;
 
 import java.util.List;
 
+import edu.gwu.ai.codeknights.hmm.config.Const;
 import org.pmw.tinylog.Logger;
 
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
@@ -52,7 +53,7 @@ public class FindGenes extends AbstractInputFileCmd {
     final FastaSequence seq = createSequenceFromInput();
 
     // Find protein-coding genes
-    final HMM hmm = new HMM(getPnn(), getPgg());
+    final HMM hmm = new HMM(getPnn(), getPgg(), Const.tableOne);
     final long startTimeMs = System.currentTimeMillis();
     final List<State> states = hmm.evaluate(seq);
     final long endTimeMs = System.currentTimeMillis();
