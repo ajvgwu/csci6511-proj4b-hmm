@@ -30,7 +30,7 @@ public class MainTest {
   @Test
   public void print() {
     FastaSequence seq = FastaSequence.build(input);
-    System.out.println(seq.toString());
+    System.out.println(seq.toPrimString());
   }
 
   @Test
@@ -44,7 +44,7 @@ public class MainTest {
   }
 
   @Test
-  public void computeProb(){
+  public void computeProb() {
     final String sequence = "AA";
     // Extract nucleotides
     final Nucleotide n1 = Nucleotide.fromChar(sequence.charAt(sequence.length() - 2));

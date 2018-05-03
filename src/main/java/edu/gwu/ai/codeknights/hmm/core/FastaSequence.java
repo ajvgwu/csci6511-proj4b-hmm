@@ -26,8 +26,8 @@ public class FastaSequence {
     // Parse input file and create sequence
     Arrays.asList(lines).forEach(line -> {
       String trimmedLine = line.trim().toUpperCase();
-      if (!(trimmedLine.startsWith("A") || trimmedLine.startsWith("C")
-          || trimmedLine.startsWith("G") || trimmedLine.startsWith("T"))) {
+      if (!(trimmedLine.startsWith(Nucleotide.A.name()) || trimmedLine.startsWith(Nucleotide.C.name())
+          || trimmedLine.startsWith(Nucleotide.G.name()) || trimmedLine.startsWith(Nucleotide.T.name()))) {
         Logger.trace("skipping line: {}", line);
       } else {
         for (int i = 0; i < trimmedLine.length(); i++) {
@@ -55,5 +55,11 @@ public class FastaSequence {
   @Override
   public String toString() {
     return String.valueOf(nucleotides);
+  }
+
+  public String toPrimString() {
+    StringBuilder string = new StringBuilder();
+    nucleotides.forEach(c -> string.append(c.name()));
+    return string.toString();
   }
 }
