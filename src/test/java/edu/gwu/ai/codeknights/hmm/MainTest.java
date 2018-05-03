@@ -1,14 +1,16 @@
+package edu.gwu.ai.codeknights.hmm;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.junit.Test;
+
 import edu.gwu.ai.codeknights.hmm.config.Const;
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
 import edu.gwu.ai.codeknights.hmm.core.Nucleotide;
 import edu.gwu.ai.codeknights.hmm.core.State;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * @author zhiyuan
@@ -21,7 +23,8 @@ public class MainTest {
   static {
     try {
       input = new String(Files.readAllBytes(Paths.get(filePath)));
-    } catch (IOException e) {
+    }
+    catch (final IOException e) {
       input = "";
       e.printStackTrace();
     }
@@ -29,17 +32,17 @@ public class MainTest {
 
   @Test
   public void print() {
-    FastaSequence seq = FastaSequence.build(input);
+    final FastaSequence seq = FastaSequence.build(input);
     System.out.println(seq.toPrimString());
   }
 
   @Test
   public void find() {
-    FastaSequence seq = FastaSequence.build(input);
-    double pnn = 0.9;
-    double pgg = 0.9;
-    HMM hmm = new HMM(pnn, pgg, Const.DEFAULT_EMIT_PROB_TABLE);
-    final List<State> states = hmm.evaluate(seq);
+    final FastaSequence seq = FastaSequence.build(input);
+    final double pnn = 0.9;
+    final double pgg = 0.9;
+    final HMM hmm = new HMM(pnn, pgg, Const.DEFAULT_EMIT_PROB_TABLE);
+    final State[] states = hmm.evaluate(seq);
     System.out.println(String.valueOf(states));
   }
 
@@ -50,8 +53,8 @@ public class MainTest {
     final Nucleotide n1 = Nucleotide.fromChar(sequence.charAt(sequence.length() - 2));
     final Nucleotide n2 = Nucleotide.fromChar(sequence.charAt(sequence.length() - 1));
 
-    double pnn = 1.0;
-    double pgg = 1.0;
+    final double pnn = 1.0;
+    final double pgg = 1.0;
 
     // Compute probabilities
     System.out.println("For sequence ending with '..." + n1.toString() + n2.toString() + "':");
@@ -60,7 +63,7 @@ public class MainTest {
       for (final Nucleotide n3 : Nucleotide.values()) {
         final double prob = hmm.getProb(state, n1, n2, n3);
         System.out.println(
-            "  > Prob(State=" + state.toString() + ", Nucleotide=" + n3.toString() + ") = " + String.valueOf(prob));
+          "  > Prob(State=" + state.toString() + ", Nucleotide=" + n3.toString() + ") = " + String.valueOf(prob));
       }
     }
   }

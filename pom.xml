@@ -29,7 +29,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <dependency.junit.version>4.12</dependency.junit.version>
     <dependency.tinylog.version>1.3.2</dependency.tinylog.version>
-    <dependency.picocli.version>2.3.0</dependency.picocli.version>
+    <dependency.picocli.version>3.0.0</dependency.picocli.version>
     <plugin.compiler.version>3.7.0</plugin.compiler.version>
     <plugin.compiler.jre.version>1.8</plugin.compiler.jre.version>
     <plugin.surefire.version>2.20.1</plugin.surefire.version>

@@ -1,16 +1,12 @@
 package edu.gwu.ai.codeknights.hmm.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.gwu.ai.codeknights.hmm.config.Const;
 
 public class HMM {
 
-  private final EmitProbTable emitProbTable;
-
   private final double pnn;
   private final double pgg;
+  private final EmitProbTable emitProbTable;
 
   public HMM(final double pnn, final double pgg, final EmitProbTable emitProbTable) {
     this.pnn = pnn;
@@ -63,26 +59,64 @@ public class HMM {
     return emitProbTable;
   }
 
-  public List<State> evaluate(final FastaSequence seq) {
-    final List<State> states = new ArrayList<>();
-
-    // Always start in non-coding state
+  /**
+   * Construct "Most Likely Explanation" (MLE) of states for the given sequence
+   *
+   * @param seq input sequence
+   * @return most likely explanation of states
+   */
+  public State[] evaluate(final FastaSequence seq) {
+    // Assume 'AA' is prepended to input sequence
     Nucleotide n1 = null;
     Nucleotide n2 = Nucleotide.A;
     Nucleotide n3 = Nucleotide.A;
-    State prevState = null;
-    State curState = State.NON_CODING;
-    for (int i = 0; i < seq.length(); i++) {
+
+    // Always start in non-coding state
+    final int length = seq.length();
+    final double[][] probabilities = new double[2][length];
+
+    // Compute probabilities for all possible paths using Viterbi algorithm
+    for (int i = 0; i < length; i++) {
       n1 = n2;
       n2 = n3;
       n3 = seq.get(i);
-      prevState = curState;
-      curState = null;
-      // TODO: use forward-algorithm to determine most likely current state
-      states.add(curState);
+
+      // Determine probabilities for current state based on previous most likely state
+      final double prevProbN = i > 0 ? probabilities[State.NON_CODING.ordinal()][i - 1] : 1.0;
+      final double prevProbG = i > 0 ? probabilities[State.CODING.ordinal()][i - 1] : 0.0;
+      final State prevState = prevProbN > prevProbG ? State.NON_CODING : State.CODING;
+      final double prevProb = Math.max(prevProbN, prevProbG);
+      final double emissionProbN = getProbN(n1, n2, n3);
+      final double emissionProbG = getProbG(n1, n2, n3);
+
+      // Compute probability for NON_CODING state
+      double probN = emissionProbN * prevProb; // TODO: what if prob approaches 0 ??? how to normalize?
+      if (State.NON_CODING.equals(prevState)) {
+        probN *= getProbNN();
+      }
+      else {
+        probN *= getProbGN();
+      }
+      probabilities[State.NON_CODING.ordinal()][i] = probN;
+
+      // Compute probability for CODING state
+      double probG = emissionProbG * prevProb; // TODO: what if prob approaches 0 ??? how to normalize?
+      if (State.CODING.equals(prevState)) {
+        probG *= getProbGG();
+      }
+      else {
+        probG *= getProbNG();
+      }
+      probabilities[State.CODING.ordinal()][i] = probG;
     }
 
-    // Return result
-    return states;
+    // Return most likely explanation (sequence of states)
+    final State[] mle = new State[length];
+    for (int i = 0; i < length; i++) {
+      final double probN = probabilities[State.NON_CODING.ordinal()][i];
+      final double probG = probabilities[State.CODING.ordinal()][i];
+      mle[i] = probN > probG ? State.NON_CODING : State.CODING;
+    }
+    return mle;
   }
 }

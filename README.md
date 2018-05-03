@@ -53,35 +53,35 @@ For general usage instructions and list of possible commands:
 
 ```bash
 $ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar --help
-Usage: hmm [-h]
+Usage: hmm [-h] [COMMAND]
 command-line interface for HMM
-  -h, --help                  show this help message and exit
+  -h, --help   show this help message and exit
 Commands:
   print          print the input sequence
-  compute-probs  compute probabilities of next nucleotide following a given
-                   sequence
-  find           find the protein coding genes in the given sequence
+  compute-probs  compute probabilities of next nucleotide following a given sequence
+  find-mle       find the most likely explanation of states for the given sequence
+  find-genes     find the protein-coding genes in the given sequence
 ```
 
 For usage instructions for a particular command:
 
 ```bash
-# java -jar ./target/csci6511-proj4b-hmm-<version>-shaded.jar <cmd> --help
-$ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find --help
-Usage: find [-h] [--pgg=<pgg>] [--pnn=<pnn>] inputFile
-find the protein coding genes in the given sequence
-      inputFile               input file containing the FASTA sequence
-      --pnn=<pnn>             probability of remaining in non-coding region
-                                Default: 0.9
-      --pgg=<pgg>             probability of remaining in coding region
-                                Default: 0.9
-  -h, --help                  show this help message and exit
+# java -jar ./target/csci6511-proj4b-hmm-<version>-shaded.jar <COMMAND> --help
+$ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find-mle --help
+Usage: find-mle [-h] [--pgg=<pgg>] [--pnn=<pnn>] inputFile
+find the most likely explanation of states for the given sequence
+      inputFile     input file containing the FASTA sequence
+      --pnn=<pnn>   probability of remaining in non-coding region
+                      Default: 0.9
+      --pgg=<pgg>   probability of remaining in coding region
+                      Default: 0.9
+  -h, --help        show this help message and exit
 ```
 
 To find the protein coding genes in an input file:
 
 ```bash
-$ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find ./src/main/resources/1_39675.txt
+$ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find-genes ./src/main/resources/1_39675.txt
 # ...
 # TODO: show example output
 ```
@@ -89,7 +89,7 @@ $ java -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find ./src/main
 For move verbose output, provide system property `tinylog.level=<level>`, where `<level>` is one of `error`, `warning`, `info`, `debug`, or `trace`:
 
 ```bash
-$ java -Dtinylog.level=debug -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find ./src/main/resources/1_39675.txt
+$ java -Dtinylog.level=debug -jar ./target/csci6511-proj4b-hmm-0.1-SNAPSHOT-shaded.jar find-genes ./src/main/resources/1_39675.txt
 # ...
 # TODO: show example output
 ```

@@ -1,43 +1,26 @@
 package edu.gwu.ai.codeknights.hmm.cli;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.pmw.tinylog.Logger;
 
-import edu.gwu.ai.codeknights.hmm.config.Const;
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
+import edu.gwu.ai.codeknights.hmm.core.Nucleotide;
 import edu.gwu.ai.codeknights.hmm.core.State;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(
   name = FindGenes.CMD_NAME, sortOptions = false, showDefaultValues = true,
-  description = "find the protein coding genes in the given sequence")
-public class FindGenes extends AbstractInputFileCmd {
+  description = "find the protein-coding genes in the given sequence")
+public class FindGenes extends AbstractFindCmd {
 
-  public static final String CMD_NAME = "find";
-
-  @Option(names = {"--pnn"}, description = "probability of remaining in non-coding region")
-  private double pnn = Const.DEFAULT_PROB_N_N;
-
-  @Option(names = {"--pgg"}, description = "probability of remaining in coding region")
-  private double pgg = Const.DEFAULT_PROB_G_G;
+  public static final String CMD_NAME = "find-genes";
 
   @Override
   protected void validateArgs() throws Exception {
     super.validateArgs();
-
-    pnn = Math.max(Math.min(pnn, 1.0), 0.0);
-    pgg = Math.max(Math.min(pgg, 1.0), 0.0);
-  }
-
-  protected double getPnn() {
-    return pnn;
-  }
-
-  protected double getPgg() {
-    return pgg;
   }
 
   @Override
@@ -52,14 +35,36 @@ public class FindGenes extends AbstractInputFileCmd {
     // Create sequence
     final FastaSequence seq = createSequenceFromInput();
 
-    // Find protein-coding genes
-    final HMM hmm = new HMM(pnn, pgg);
+    // Find most likely explanation of states
+    final HMM hmm = new HMM(getPnn(), getPgg());
     final long startTimeMs = System.currentTimeMillis();
-    final List<State> states = hmm.evaluate(seq);
+    final State[] states = hmm.evaluate(seq);
+
+    // Find protein-coding genes
+    Integer lastStartIdx = null;
+    final List<Gene> genes = new ArrayList<>();
+    for (int i = 0; i < states.length; i++) {
+      if (State.NON_CODING.equals(states[i])) {
+        if (lastStartIdx != null) {
+          final Gene gene = new Gene(lastStartIdx, i);
+          genes.add(gene);
+          lastStartIdx = null;
+        }
+      }
+      else {
+        if (lastStartIdx == null) {
+          lastStartIdx = i;
+        }
+      }
+    }
     final long endTimeMs = System.currentTimeMillis();
 
     // Print result
-    System.out.println(String.valueOf(states));
+    System.out.println("states=" + String.valueOf(states));
+    for (final Gene gene : genes) {
+      System.out.println("  > gene at idx=" + String.valueOf(gene.getStartIdx()) + ", length="
+        + String.valueOf(gene.getLength()) + ": " + String.valueOf(gene.getNucleotides(seq)));
+    }
 
     // Log elapsed time
     final double elapsedSec = (double) (endTimeMs - startTimeMs) / 1000.0;
@@ -67,5 +72,28 @@ public class FindGenes extends AbstractInputFileCmd {
 
     // Done.
     return null;
+  }
+
+  public static class Gene {
+
+    private final int startIdx;
+    private final int endIdx;
+
+    public Gene(final int startIdx, final int endIdx) {
+      this.startIdx = startIdx;
+      this.endIdx = endIdx;
+    }
+
+    public int getStartIdx() {
+      return startIdx;
+    }
+
+    public int getLength() {
+      return endIdx - startIdx;
+    }
+
+    public List<Nucleotide> getNucleotides(final FastaSequence seq) {
+      return seq.getNucleotides().subList(startIdx, endIdx);
+    }
   }
 }

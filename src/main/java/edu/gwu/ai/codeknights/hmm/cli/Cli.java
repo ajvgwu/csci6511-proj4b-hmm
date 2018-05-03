@@ -10,6 +10,7 @@ import picocli.CommandLine.RunLast;
   subcommands = {
     PrintSequence.class,
     ComputeProbs.class,
+    FindMLE.class,
     FindGenes.class
   })
 public class Cli extends AbstractCmd {
@@ -35,6 +36,6 @@ public class Cli extends AbstractCmd {
 
   public static void main(final String[] args) {
     final CommandLine commandLine = new CommandLine(new Cli());
-    commandLine.parseWithHandler(new RunLast(), System.err, args);
+    commandLine.parseWithHandler(new RunLast(), args);
   }
 }

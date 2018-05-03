@@ -1,11 +1,11 @@
 package edu.gwu.ai.codeknights.hmm.cli;
 
-import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
-import picocli.CommandLine.Parameters;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
+import picocli.CommandLine.Parameters;
 
 public abstract class AbstractInputFileCmd extends AbstractCmd {
 
