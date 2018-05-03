@@ -1,15 +1,13 @@
 package edu.gwu.ai.codeknights.hmm.cli;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.pmw.tinylog.Logger;
-
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
 import edu.gwu.ai.codeknights.hmm.core.Nucleotide;
 import edu.gwu.ai.codeknights.hmm.core.State;
+import org.pmw.tinylog.Logger;
 import picocli.CommandLine.Command;
+
+import java.util.List;
 
 @Command(
   name = FindGenes.CMD_NAME, sortOptions = false, showDefaultValues = true,
@@ -38,29 +36,17 @@ public class FindGenes extends AbstractFindCmd {
     // Find most likely explanation of states
     final HMM hmm = new HMM(getPnn(), getPgg());
     final long startTimeMs = System.currentTimeMillis();
-    final State[] states = hmm.evaluate(seq);
-
-    // Find protein-coding genes
-    Integer lastStartIdx = null;
-    final List<Gene> genes = new ArrayList<>();
-    for (int i = 0; i < states.length; i++) {
-      if (State.NON_CODING.equals(states[i])) {
-        if (lastStartIdx != null) {
-          final Gene gene = new Gene(lastStartIdx, i);
-          genes.add(gene);
-          lastStartIdx = null;
-        }
-      }
-      else {
-        if (lastStartIdx == null) {
-          lastStartIdx = i;
-        }
-      }
+    State[] states = hmm.evaluate(seq);
+    final StringBuilder stateStr = new StringBuilder();
+    for (State state : states) {
+      stateStr.append(state);
     }
+    List<Gene> genes = hmm.extractGenes(stateStr.toString());
     final long endTimeMs = System.currentTimeMillis();
 
     // Print result
-    System.out.println("states=" + String.valueOf(states));
+    System.out.println(" Genes=" + seq.toPrimString());
+    System.out.println("states=" + stateStr.toString());
     for (final Gene gene : genes) {
       System.out.println("  > gene at idx=" + String.valueOf(gene.getStartIdx()) + ", length="
         + String.valueOf(gene.getLength()) + ": " + String.valueOf(gene.getNucleotides(seq)));

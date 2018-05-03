@@ -1,6 +1,10 @@
 package edu.gwu.ai.codeknights.hmm.core;
 
+import edu.gwu.ai.codeknights.hmm.cli.FindGenes;
 import edu.gwu.ai.codeknights.hmm.config.Const;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HMM {
 
@@ -118,5 +122,21 @@ public class HMM {
       mle[i] = probN > probG ? State.NON_CODING : State.CODING;
     }
     return mle;
+  }
+
+  public List<FindGenes.Gene> extractGenes(final String stateStr){
+    String[] regions = stateStr.split(State.NON_CODING.getId());
+
+    // Find protein-coding genes
+    final List<FindGenes.Gene> genes = new ArrayList<>();
+    for (int i = 0, index = 0; i < regions.length; i++) {
+      final FindGenes.Gene gene = new FindGenes.Gene(index, index += regions[i].length());
+      index += 1;
+      if(regions[i].length() == 0){
+        continue;
+      }
+      genes.add(gene);
+    }
+    return genes;
   }
 }

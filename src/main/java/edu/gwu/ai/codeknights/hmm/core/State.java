@@ -7,7 +7,7 @@ public enum State {
 
   private final String id;
 
-  private State(final String id) {
+  State(final String id) {
     this.id = id;
   }
 
