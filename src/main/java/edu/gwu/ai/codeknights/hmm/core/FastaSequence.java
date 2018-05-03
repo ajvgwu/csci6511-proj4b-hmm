@@ -33,7 +33,7 @@ public class FastaSequence {
         for (int i = 0; i < trimmedLine.length(); i++) {
           final Nucleotide n = Nucleotide.fromChar(trimmedLine.charAt(i));
           nucs.add(n);
-        }
+        } 
       }
     });
 

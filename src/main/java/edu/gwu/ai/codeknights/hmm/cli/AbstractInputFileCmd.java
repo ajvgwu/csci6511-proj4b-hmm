@@ -17,6 +17,7 @@ public abstract class AbstractInputFileCmd extends AbstractCmd {
     super.validateArgs();
 
     if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
+      inputFile = null;
       throw new IllegalArgumentException("invalid inputFile: " + String.valueOf(inputFile));
     }
   }
@@ -26,7 +27,7 @@ public abstract class AbstractInputFileCmd extends AbstractCmd {
   }
 
   protected FastaSequence createSequenceFromInput() throws IOException, IllegalArgumentException {
-    String input = new String(Files.readAllBytes(inputFile.toPath()));
+    final String input = new String(Files.readAllBytes(inputFile.toPath()));
     return FastaSequence.build(input);
   }
 }

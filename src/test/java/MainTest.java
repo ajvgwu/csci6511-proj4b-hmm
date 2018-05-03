@@ -38,7 +38,7 @@ public class MainTest {
     FastaSequence seq = FastaSequence.build(input);
     double pnn = 0.9;
     double pgg = 0.9;
-    HMM hmm = new HMM(pnn, pgg, Const.TABLE_ONE);
+    HMM hmm = new HMM(pnn, pgg, Const.DEFAULT_EMIT_PROB_TABLE);
     final List<State> states = hmm.evaluate(seq);
     System.out.println(String.valueOf(states));
   }
@@ -55,7 +55,7 @@ public class MainTest {
 
     // Compute probabilities
     System.out.println("For sequence ending with '..." + n1.toString() + n2.toString() + "':");
-    final HMM hmm = new HMM(pnn, pgg, Const.TABLE_ONE);
+    final HMM hmm = new HMM(pnn, pgg, Const.DEFAULT_EMIT_PROB_TABLE);
     for (final State state : State.values()) {
       for (final Nucleotide n3 : Nucleotide.values()) {
         final double prob = hmm.getProb(state, n1, n2, n3);

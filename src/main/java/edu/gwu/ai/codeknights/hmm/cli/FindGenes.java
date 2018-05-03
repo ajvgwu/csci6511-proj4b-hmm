@@ -2,9 +2,9 @@ package edu.gwu.ai.codeknights.hmm.cli;
 
 import java.util.List;
 
-import edu.gwu.ai.codeknights.hmm.config.Const;
 import org.pmw.tinylog.Logger;
 
+import edu.gwu.ai.codeknights.hmm.config.Const;
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
 import edu.gwu.ai.codeknights.hmm.core.State;
@@ -19,10 +19,10 @@ public class FindGenes extends AbstractInputFileCmd {
   public static final String CMD_NAME = "find";
 
   @Option(names = {"--pnn"}, description = "probability of remaining in non-coding region")
-  private double pnn = 0.9;
+  private double pnn = Const.DEFAULT_PROB_N_N;
 
   @Option(names = {"--pgg"}, description = "probability of remaining in coding region")
-  private double pgg = 0.9;
+  private double pgg = Const.DEFAULT_PROB_G_G;
 
   @Override
   protected void validateArgs() throws Exception {
@@ -53,7 +53,7 @@ public class FindGenes extends AbstractInputFileCmd {
     final FastaSequence seq = createSequenceFromInput();
 
     // Find protein-coding genes
-    final HMM hmm = new HMM(getPnn(), getPgg(), Const.TABLE_ONE);
+    final HMM hmm = new HMM(pnn, pgg);
     final long startTimeMs = System.currentTimeMillis();
     final List<State> states = hmm.evaluate(seq);
     final long endTimeMs = System.currentTimeMillis();

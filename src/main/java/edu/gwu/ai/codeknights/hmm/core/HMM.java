@@ -3,6 +3,8 @@ package edu.gwu.ai.codeknights.hmm.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.gwu.ai.codeknights.hmm.config.Const;
+
 public class HMM {
 
   private final EmitProbTable emitProbTable;
@@ -14,6 +16,14 @@ public class HMM {
     this.pnn = pnn;
     this.pgg = pgg;
     this.emitProbTable = emitProbTable;
+  }
+
+  public HMM(final double pnn, final double pgg) {
+    this(pnn, pgg, Const.DEFAULT_EMIT_PROB_TABLE);
+  }
+
+  public HMM() {
+    this(Const.DEFAULT_PROB_N_N, Const.DEFAULT_PROB_G_G, Const.DEFAULT_EMIT_PROB_TABLE);
   }
 
   public double getProbNN() {
@@ -47,6 +57,10 @@ public class HMM {
     else {
       return getProbG(n1, n2, n3);
     }
+  }
+
+  public EmitProbTable getEmitProbTable() {
+    return emitProbTable;
   }
 
   public List<State> evaluate(final FastaSequence seq) {
