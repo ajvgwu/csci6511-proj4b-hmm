@@ -1,13 +1,15 @@
 package edu.gwu.ai.codeknights.hmm.cli;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.pmw.tinylog.Logger;
+
 import edu.gwu.ai.codeknights.hmm.core.FastaSequence;
 import edu.gwu.ai.codeknights.hmm.core.HMM;
 import edu.gwu.ai.codeknights.hmm.core.Nucleotide;
 import edu.gwu.ai.codeknights.hmm.core.State;
-import org.pmw.tinylog.Logger;
 import picocli.CommandLine.Command;
-
-import java.util.List;
 
 @Command(
   name = FindGenes.CMD_NAME, sortOptions = false, showDefaultValues = true,
@@ -36,21 +38,29 @@ public class FindGenes extends AbstractFindCmd {
     // Find most likely explanation of states
     final HMM hmm = new HMM(getPnn(), getPgg());
     final long startTimeMs = System.currentTimeMillis();
-    State[] states = hmm.evaluate(seq);
+    final HMM.Result result = hmm.evaluate(seq);
+    final State[] states = result.getStates();
     final StringBuilder stateStr = new StringBuilder();
-    for (State state : states) {
+    for (final State state : states) {
       stateStr.append(state);
     }
-    List<Gene> genes = hmm.extractGenes(stateStr.toString());
+    final List<Gene> genes = hmm.extractGenes(stateStr.toString());
     final long endTimeMs = System.currentTimeMillis();
 
     // Print result
-    System.out.println(" Genes=" + seq.toPrimString());
+    System.out.println("seq=" + seq.toPrimString());
     System.out.println("states=" + stateStr.toString());
     for (final Gene gene : genes) {
-      System.out.println("  > gene at idx=" + String.valueOf(gene.getStartIdx()) + ", length="
-        + String.valueOf(gene.getLength()) + ": " + String.valueOf(gene.getNucleotides(seq)));
+      final int endIdx = gene.getStartIdx() + gene.getLength() - 1;
+      System.out.println("  > gene at seq[" + String.valueOf(gene.getStartIdx()) + ":" + String.valueOf(endIdx)
+        + "] (length=" + String.valueOf(gene.getLength()) + "): " + String.valueOf(gene.getNucleotides(seq)));
     }
+    System.out.println("numGenes=" + String.valueOf(genes.size()));
+    final long numCoding = Arrays.asList(states).stream().filter(s -> State.CODING.equals(s)).count();
+    System.out
+      .println("percent in state " + State.CODING.name() + ": " + (double) numCoding / (double) states.length * 100.0);
+    System.out.println("pathScore=" + String.valueOf(result.getPathScore()) + " (prob="
+      + String.valueOf(result.getPathProbability()) + ")");
 
     // Log elapsed time
     final double elapsedSec = (double) (endTimeMs - startTimeMs) / 1000.0;

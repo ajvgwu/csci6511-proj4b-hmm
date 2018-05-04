@@ -42,7 +42,8 @@ public class MainTest {
   public void find() {
     final FastaSequence seq = FastaSequence.build(input);
     final HMM hmm = new HMM(Const.DEFAULT_PROB_N_N, Const.DEFAULT_PROB_G_G, Const.DEFAULT_EMIT_PROB_TABLE);
-    State[] states = hmm.evaluate(seq);
+    HMM.Result result = hmm.evaluate(seq);
+    State[] states = result.getStates();
     final StringBuilder stateStr = new StringBuilder();
     for (State state : states) {
       stateStr.append(state);
@@ -82,7 +83,8 @@ public class MainTest {
 
     // Find most likely explanation of states
     final HMM hmm = new HMM(Const.DEFAULT_PROB_N_N, Const.DEFAULT_PROB_G_G, Const.DEFAULT_EMIT_PROB_TABLE);
-    final State[] states = hmm.evaluate(sequence);
+    final HMM.Result result = hmm.evaluate(sequence);
+    final State[] states = result.getStates();
 
     // Print result
     System.out.println(String.valueOf(Arrays.asList(states)));

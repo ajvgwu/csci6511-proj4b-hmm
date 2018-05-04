@@ -36,10 +36,11 @@ public class FindMLE extends AbstractFindCmd {
     // Find most likely explanation of states
     final HMM hmm = new HMM(getPnn(), getPgg());
     final long startTimeMs = System.currentTimeMillis();
-    final State[] states = hmm.evaluate(seq);
+    final HMM.Result result = hmm.evaluate(seq);
     final long endTimeMs = System.currentTimeMillis();
 
     // Print result
+    final State[] states = result.getStates();
     System.out.println(String.valueOf(Arrays.asList(states)));
 
     // Log elapsed time
